@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One Hundred Years in the U.S. Stock Markets — Bessembinder (2026)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Code+Pro:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ink:       #1a1810;
+  --ink-mid:   #3d3a30;
+  --ink-faint: #7a7568;
+  --rule:      #c8c2b0;
+  --bg:        #f5f1e8;
+  --bg-warm:   #ede8da;
+  --bg-deep:   #e4dece;
+  --accent:    #8b1a1a;
+  --accent2:   #1a3a5c;
+  --accent3:   #4a5a30;
+  --mono:      'Source Code Pro', monospace;
+  --serif:     'Libre Baskerville', Georgia, serif;
+  --body:      'EB Garamond', Georgia, serif;
+  --col:       680px;
+  --max:       960px;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 18px; line-height: 1.7; }
+
+/* MASTHEAD */
+.masthead { border-bottom: 2px solid var(--ink); padding: 3.5rem 2rem 2.5rem; max-width: var(--max); margin: 0 auto; }
+.masthead-eyebrow { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.18em; color: var(--ink-faint); text-transform: uppercase; margin-bottom: 1.4rem; display: flex; align-items: center; gap: 0.8rem; }
+.masthead-eyebrow::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
+.masthead h1 { font-family: var(--serif); font-size: clamp(1.8rem,4.5vw,2.9rem); font-weight: 700; line-height: 1.18; max-width: 820px; margin-bottom: 0.5rem; }
+.masthead-subtitle { font-family: var(--body); font-style: italic; color: var(--ink-faint); font-size: 1rem; margin-bottom: 1.6rem; }
+.masthead-meta { display: flex; flex-wrap: wrap; gap: 2rem; font-family: var(--mono); font-size: 0.73rem; color: var(--ink-mid); border-top: 1px solid var(--rule); padding-top: 1rem; margin-top: 1rem; }
+.meta-block span { display: block; }
+.meta-label { color: var(--ink-faint); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.15rem; }
+.ssrn-link { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1.4rem; font-family: var(--mono); font-size: 0.7rem; color: var(--accent2); border: 1px solid var(--accent2); padding: 0.4rem 0.9rem; text-decoration: none; letter-spacing: 0.05em; transition: background 0.15s, color 0.15s; }
+.ssrn-link:hover { background: var(--accent2); color: var(--bg); }
+
+/* NAV */
+.site-nav { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--rule); padding: 0 2rem; }
+.nav-inner { max-width: var(--max); margin: 0 auto; display: flex; overflow-x: auto; scrollbar-width: none; }
+.nav-inner::-webkit-scrollbar { display: none; }
+.nav-inner a { font-family: var(--mono); font-size: 0.63rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); text-decoration: none; padding: 0.75rem 0.9rem; border-bottom: 2px solid transparent; white-space: nowrap; transition: color 0.12s, border-color 0.12s; }
+.nav-inner a:hover { color: var(--ink); border-bottom-color: var(--accent); }
+
+/* SECTIONS */
+.section { max-width: var(--max); margin: 0 auto; padding: 3.5rem 2rem; border-bottom: 1px solid var(--rule); }
+.section:last-of-type { border-bottom: none; }
+.section-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.18em; color: var(--ink-faint); text-transform: uppercase; margin-bottom: 0.9rem; }
+.section h2 { font-family: var(--serif); font-size: clamp(1.2rem,2.5vw,1.65rem); font-weight: 700; line-height: 1.22; margin-bottom: 1.4rem; max-width: var(--col); }
+.prose { max-width: var(--col); color: var(--ink-mid); font-size: 1rem; line-height: 1.78; }
+.prose p + p { margin-top: 0.9em; }
+blockquote.paper-quote { max-width: var(--col); border-left: 3px solid var(--accent); padding: 0.8rem 1.3rem; margin: 1.8rem 0; font-style: italic; color: var(--ink-mid); background: var(--bg-warm); font-size: 0.97rem; }
+blockquote.paper-quote cite { display: block; font-style: normal; font-family: var(--mono); font-size: 0.62rem; color: var(--ink-faint); margin-top: 0.5rem; letter-spacing: 0.07em; }
+.data-source { font-family: var(--mono); font-size: 0.6rem; color: var(--ink-faint); letter-spacing: 0.07em; margin-top: 0.6rem; }
+
+/* FINDINGS */
+.findings-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 1.5px; margin-top: 2rem; background: var(--rule); border: 1.5px solid var(--ink); }
+.finding-card { background: var(--bg-warm); padding: 1.6rem 1.4rem; opacity: 0; transform: translateY(12px); transition: opacity 0.5s ease, transform 0.5s ease; }
+.finding-card.vis { opacity: 1; transform: none; }
+.finding-num { font-family: var(--mono); font-size: 0.6rem; color: var(--accent); letter-spacing: 0.1em; margin-bottom: 0.6rem; }
+.finding-stat { font-family: var(--serif); font-size: 2.1rem; font-weight: 700; line-height: 1.1; color: var(--ink); margin-bottom: 0.5rem; }
+.finding-desc { font-family: var(--body); font-size: 0.87rem; color: var(--ink-mid); line-height: 1.5; }
+
+/* CHARTS */
+.chart-wrap { margin-top: 2rem; background: var(--bg-warm); border: 1px solid var(--rule); padding: 1.5rem 1.5rem 1rem; }
+.chart-title { font-family: var(--serif); font-size: 0.92rem; font-weight: 700; margin-bottom: 0.2rem; color: var(--ink); }
+.chart-sub { font-family: var(--body); font-size: 0.8rem; color: var(--ink-faint); margin-bottom: 1.2rem; font-style: italic; }
+canvas { max-width: 100%; }
+
+/* SKEWNESS */
+.skew-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.1rem; }
+.skew-label { font-family: var(--mono); font-size: 0.66rem; width: 95px; flex-shrink: 0; color: var(--ink-mid); line-height: 1.35; }
+.skew-bar-outer { flex: 1; background: var(--bg-deep); height: 26px; position: relative; }
+.skew-bar { height: 100%; }
+.skew-value { font-family: var(--mono); font-size: 0.7rem; color: var(--ink); white-space: nowrap; min-width: 96px; }
+
+/* TABLES */
+.data-table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; font-size: 0.82rem; }
+.data-table thead tr { border-bottom: 2px solid var(--ink); }
+.data-table th { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); padding: 0.5rem 0.7rem 0.5rem 0; text-align: left; font-weight: 400; white-space: nowrap; }
+.data-table th.r, .data-table td.r { text-align: right; padding-right: 0; padding-left: 0.7rem; }
+.data-table tbody tr { border-bottom: 1px solid var(--rule); transition: background 0.1s; }
+.data-table tbody tr:hover { background: var(--bg-warm); }
+.data-table td { padding: 0.5rem 0.7rem 0.5rem 0; color: var(--ink-mid); }
+.data-table td.firm { font-family: var(--serif); font-size: 0.84rem; color: var(--ink); }
+.data-table td.mono { font-family: var(--mono); font-size: 0.72rem; text-align: right; padding-right: 0; padding-left: 0.7rem; }
+.rank-pill { font-family: var(--mono); font-size: 0.6rem; color: var(--ink-faint); padding: 0.1rem 0.35rem; border: 1px solid var(--rule); }
+.mini-bar { display: inline-block; height: 7px; background: var(--accent2); vertical-align: middle; margin-right: 5px; }
+
+/* CONCENTRATION */
+.conc-panel { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-top: 2rem; }
+.conc-cell { background: var(--bg); padding: 1.5rem 1.2rem; }
+.conc-period { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; color: var(--ink-faint); text-transform: uppercase; margin-bottom: 0.8rem; }
+.conc-stat { font-family: var(--serif); font-size: 2.4rem; font-weight: 700; color: var(--ink); line-height: 1; margin-bottom: 0.4rem; }
+.conc-desc { font-size: 0.82rem; color: var(--ink-mid); line-height: 1.45; font-family: var(--body); }
+.conc-total { font-family: var(--mono); font-size: 0.65rem; color: var(--ink-faint); margin-top: 0.7rem; }
+
+/* WEALTH TIERS */
+.wealth-strip { display: flex; height: 36px; border: 1px solid var(--rule); overflow: hidden; margin-top: 0.4rem; }
+.strip-label-row { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.62rem; color: var(--ink-faint); margin-bottom: 0.3rem; letter-spacing: 0.06em; }
+.strip-legend { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.6rem; }
+.legend-row { display: flex; align-items: flex-start; gap: 0.7rem; }
+.legend-swatch { width: 14px; height: 14px; flex-shrink: 0; margin-top: 3px; }
+.legend-text { font-family: var(--mono); font-size: 0.65rem; color: var(--ink-mid); line-height: 1.5; }
+
+/* COMPOUNDING */
+.compound-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-top: 2rem; }
+.compound-cell { background: var(--bg-warm); padding: 1.6rem 1.4rem; }
+.compound-company { font-family: var(--serif); font-weight: 700; font-size: 1rem; margin-bottom: 0.3rem; color: var(--ink); }
+.compound-years { font-family: var(--mono); font-size: 0.62rem; color: var(--ink-faint); margin-bottom: 1rem; }
+.compound-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--rule); }
+.compound-row:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.compound-metric { font-family: var(--mono); font-size: 0.62rem; color: var(--ink-faint); }
+.compound-value { font-family: var(--serif); font-weight: 700; font-size: 1.05rem; color: var(--ink); }
+.compound-note { font-family: var(--body); font-style: italic; font-size: 0.8rem; color: var(--ink-faint); margin-top: 0.8rem; line-height: 1.4; }
+
+/* DECADE GRID */
+.decade-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-top: 1.8rem; }
+.decade-cell { background: var(--bg); padding: 1.1rem 0.8rem; text-align: center; }
+.decade-year { font-family: var(--mono); font-size: 0.6rem; color: var(--ink-faint); letter-spacing: 0.07em; margin-bottom: 0.5rem; }
+.decade-pct { font-family: var(--serif); font-size: 1.45rem; font-weight: 700; line-height: 1; margin-bottom: 0.3rem; }
+.decade-bar { height: 4px; background: var(--bg-deep); margin: 0.4rem auto; max-width: 56px; position: relative; }
+.decade-bar-fill { position: absolute; left: 0; top: 0; height: 100%; }
+.decade-foot { font-family: var(--mono); font-size: 0.57rem; color: var(--ink-faint); }
+
+/* CITATION */
+.citation-box { background: var(--bg-warm); border: 1px solid var(--rule); padding: 1.4rem 1.6rem; max-width: var(--col); margin-top: 1.4rem; }
+.citation-label { font-family: var(--mono); font-size: 0.59rem; letter-spacing: 0.12em; color: var(--ink-faint); text-transform: uppercase; margin-bottom: 0.6rem; }
+.citation-text { font-family: var(--mono); font-size: 0.71rem; line-height: 1.75; color: var(--ink-mid); word-break: break-word; }
+.citation-text a { color: var(--accent2); }
+
+/* ABSTRACT */
+.abstract-text { font-family: var(--body); font-size: 0.97rem; line-height: 1.8; color: var(--ink-mid); max-width: var(--col); border-left: 3px solid var(--rule); padding-left: 1.4rem; margin-top: 1rem; }
+
+/* FOOTER */
+footer { background: var(--ink); color: #a09880; text-align: center; padding: 2rem; font-family: var(--mono); font-size: 0.63rem; letter-spacing: 0.08em; line-height: 2; }
+
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.55s ease, transform 0.55s ease; }
+.reveal.vis { opacity: 1; transform: none; }
+
+@media (max-width: 640px) {
+  .conc-panel, .compound-panel { grid-template-columns: 1fr; }
+  .decade-grid { grid-template-columns: repeat(2,1fr); }
+  .findings-grid { grid-template-columns: 1fr; }
+  .skew-label { width: 72px; }
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-eyebrow">Working Paper &middot; Finance &middot; Asset Pricing &middot; CRSP 1926–2025</div>
+  <h1>One Hundred Years in the U.S. Stock Markets</h1>
+  <div class="masthead-subtitle">Long-run equity returns, shareholder wealth creation, and concentration in the U.S. public markets</div>
+  <div class="masthead-meta">
+    <div class="meta-block"><span class="meta-label">Author</span><span>Hendrik Bessembinder</span></div>
+    <div class="meta-block"><span class="meta-label">Affiliation</span><span>W. P. Carey School of Business, Arizona State University</span></div>
+    <div class="meta-block"><span class="meta-label">Initial Draft</span><span>March 18, 2026</span></div>
+    <div class="meta-block"><span class="meta-label">Sample</span><span>29,754 common stocks &middot; 29,081 firms</span></div>
+    <div class="meta-block"><span class="meta-label">Database</span><span>CRSP CIZ &middot; Jan 1926 – Dec 2025</span></div>
+  </div>
+  <a class="ssrn-link" href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6438198" target="_blank" rel="noopener">↗ Full paper on SSRN</a>
+</header>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="#abstract">Abstract</a>
+    <a href="#findings">Key Results</a>
+    <a href="#distribution">Distribution</a>
+    <a href="#compounding">Compounding</a>
+    <a href="#tiers">Wealth Tiers</a>
+    <a href="#concentration">Concentration</a>
+    <a href="#top-swc">Top Creators</a>
+    <a href="#top-bhr">Top Returns</a>
+    <a href="#decades">By Decade</a>
+    <a href="#citation">Citation</a>
+  </div>
+</nav>
+
+<!-- § 1 ABSTRACT -->
+<section class="section reveal" id="abstract">
+  <div class="section-label">§ 1 &middot; Abstract</div>
+  <h2>Overview</h2>
+  <div class="abstract-text">
+    This study summarizes investment outcomes for 29,754 common stocks listed in the public U.S. stock markets over the 100-year period from 1926 to 2025, reporting on both compound (buy-and-hold) percentage returns and shareholder wealth enhancement measured in dollars. While the cross-stock mean buy-and-hold return is over 30,000%, the median is −6.9%. Shareholders' wealth was enhanced by $91 trillion over the century, but long-term investors in nearly 60% of stocks incurred wealth reductions. The degree to which wealth creation is concentrated in a few firms has increased sharply in recent years. Over the 1926 to 2016 period studied in Bessembinder (2018), 89 firms accounted for half of the $43 trillion in net wealth creation. After including outcomes for the most recent nine years, just 46 firms account for half of the $91 trillion in net wealth creation over the full century.
+  </div>
+  <div class="data-source" style="max-width:var(--col);margin-top:0.8rem;">Source: Abstract, Bessembinder (2026). Reproduced verbatim.</div>
+</section>
+
+<!-- § 2 KEY RESULTS -->
+<section class="section" id="findings">
+  <div class="section-label">§ 2 &middot; Key Results</div>
+  <h2>Central Empirical Findings</h2>
+  <div class="prose"><p>All figures are reported directly in the paper. Each corresponds to a primary empirical result from Sections 2–3 or Table 7.</p></div>
+  <div class="findings-grid">
+    <div class="finding-card">
+      <div class="finding-num">Result 01</div>
+      <div class="finding-stat">$91T</div>
+      <div class="finding-desc">Net shareholder wealth creation above the T-bill benchmark, measured as of December 2025, summed across all 29,081 sample firms over the full century.</div>
+    </div>
+    <div class="finding-card">
+      <div class="finding-num">Result 02</div>
+      <div class="finding-stat">−6.9%</div>
+      <div class="finding-desc">Median buy-and-hold return across individual stocks. Only 48.2% generated a positive return. The mean — 30,621% — is driven by extreme performers in the right tail.</div>
+    </div>
+    <div class="finding-card">
+      <div class="finding-num">Result 03</div>
+      <div class="finding-stat">59.1%</div>
+      <div class="finding-desc">Share of firms that reduced shareholder wealth relative to T-bills. The overall market's success was attributable to outcomes in a small fraction of firms.</div>
+    </div>
+    <div class="finding-card">
+      <div class="finding-num">Result 04</div>
+      <div class="finding-stat">3.72%</div>
+      <div class="finding-desc">Share of firms (1,082 out of 29,081) that account for 100% of net SWC. The remaining 96.3% collectively match Treasury-bill returns in aggregate.</div>
+    </div>
+    <div class="finding-card">
+      <div class="finding-num">Result 05</div>
+      <div class="finding-stat">46</div>
+      <div class="finding-desc">Firms accounting for 50% of all net SWC over the full century — down from 89 firms in the 1926–2016 sub-period, reflecting sharply increased concentration.</div>
+    </div>
+    <div class="finding-card">
+      <div class="finding-num">Result 06</div>
+      <div class="finding-stat">6.81%</div>
+      <div class="finding-desc">Ex-post annualized risk premium for the value-weighted U.S. stock market over the century: 10.1% stock return vs. 3.3% T-bill return (both geometric means).</div>
+    </div>
+  </div>
+  <div class="data-source" style="margin-top:1rem;">Source: Abstract and Sections 2–3, Bessembinder (2026)</div>
+</section>
+
+<!-- § 3 DISTRIBUTION -->
+<section class="section reveal" id="distribution">
+  <div class="section-label">§ 3 &middot; Return Distribution</div>
+  <h2>Positive Skewness and the Mean–Median Gap</h2>
+  <div class="prose">
+    <p>A structural feature of long-run equity returns is strong positive skewness. Compounding amplifies this asymmetry: losses are bounded at −100% (limited liability), while gains face no upper ceiling. Over long horizons, most individual stocks underperform the mean, and the mean itself far exceeds the median.</p>
+  </div>
+  <blockquote class="paper-quote">
+    "Positive skewness arises in part because there is no ceiling on the potential magnitude of positive returns, while as long as legal systems incorporate limited liability, no return can be less than −100%."
+    <cite>— Bessembinder (2026), Section 2</cite>
+  </blockquote>
+
+  <div style="margin-top:2rem;max-width:var(--col);">
+    <div class="skew-row">
+      <div class="skew-label">VW market<br><span style="font-size:0.55rem;color:var(--ink-faint)">100-yr compound</span></div>
+      <div class="skew-bar-outer"><div class="skew-bar" style="width:100%;background:var(--accent2)"></div></div>
+      <div class="skew-value">1,504,057%</div>
+    </div>
+    <div class="skew-row">
+      <div class="skew-label">Mean BHR<br><span style="font-size:0.55rem;color:var(--ink-faint)">cross-stock</span></div>
+      <div class="skew-bar-outer"><div class="skew-bar" style="width:100%;background:#2a5a8c;opacity:0.6"></div></div>
+      <div class="skew-value">30,621%</div>
+    </div>
+    <div class="skew-row">
+      <div class="skew-label">T-bill<br><span style="font-size:0.55rem;color:var(--ink-faint)">100-yr compound</span></div>
+      <div class="skew-bar-outer"><div class="skew-bar" style="width:0.16%;background:#888"></div></div>
+      <div class="skew-value">2,434%</div>
+    </div>
+    <div class="skew-row">
+      <div class="skew-label">Median BHR<br><span style="font-size:0.55rem;color:var(--ink-faint)">cross-stock</span></div>
+      <div class="skew-bar-outer" style="position:relative"><div style="position:absolute;left:0;top:0;width:3px;height:100%;background:var(--accent)"></div></div>
+      <div class="skew-value" style="color:var(--accent)">−6.87%</div>
+    </div>
+    <div class="data-source" style="margin-top:0.7rem;">Note: bars reflect proportional magnitudes relative to the value-weighted market return (set as reference). T-bill and median bars are not to literal scale. All figures source-exact from Section 2, Bessembinder (2026). The contrast is illustrative of the skewness documented in the paper.</div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Share of Stocks Exceeding Return Benchmarks (Full 1926–2025 Sample)</div>
+    <div class="chart-sub">Source-exact figures. Section 2, Bessembinder (2026).</div>
+    <canvas id="proportionChart" height="90"></canvas>
+    <div class="data-source">Source: Section 2, Bessembinder (2026)</div>
+  </div>
+</section>
+
+<!-- § 4 COMPOUNDING -->
+<section class="section reveal" id="compounding">
+  <div class="section-label">§ 4 &middot; The Power of Compounding</div>
+  <h2>Modest Rates, Long Horizons: The Altria–Vulcan Comparison</h2>
+  <div class="prose">
+    <p>Among the top-30 cumulative performers (Table 1), the median annualized return is just 13.02% and the mean is 13.00% — moderate by most standards. What differentiates these stocks is duration: their average listing period is 93.9 years. The Altria/Vulcan comparison, drawn directly from the paper, illustrates the non-linear force of compounding with particular clarity.</p>
+    <p>Both firms were listed for the full 100 years. Altria's annualized return is 1.18× Vulcan's. Its cumulative return is 8.81× larger.</p>
+  </div>
+  <div class="compound-panel">
+    <div class="compound-cell">
+      <div class="compound-company">Altria Group Inc.</div>
+      <div class="compound-years">Jan 1926 – Dec 2025 &middot; 100 years</div>
+      <div class="compound-row"><span class="compound-metric">Annualized compound return</span><span class="compound-value">16.53%</span></div>
+      <div class="compound-row"><span class="compound-metric">Cumulative gross wealth / $1</span><span class="compound-value">$4,421,136</span></div>
+      <div class="compound-note">Highest cumulative return in the full 100-year CRSP sample.</div>
+    </div>
+    <div class="compound-cell">
+      <div class="compound-company">Vulcan Materials Co.</div>
+      <div class="compound-years">Jan 1926 – Dec 2025 &middot; 100 years</div>
+      <div class="compound-row"><span class="compound-metric">Annualized compound return</span><span class="compound-value">14.03%</span></div>
+      <div class="compound-row"><span class="compound-metric">Cumulative gross wealth / $1</span><span class="compound-value">$501,591</span></div>
+      <div class="compound-note">Annualized return is 1.18× lower; cumulative return is 8.81× lower.</div>
+    </div>
+  </div>
+  <blockquote class="paper-quote" style="margin-top:1.8rem;">
+    "The data reported in Table 1 support the relevance of the adage focused on the importance of 'time in the market.'"
+    <cite>— Bessembinder (2026), Section 2</cite>
+  </blockquote>
+  <div class="chart-wrap" style="margin-top:1.5rem;">
+    <div class="chart-title">Rate Ratio vs. Cumulative Outcome Ratio: Altria / Vulcan Materials</div>
+    <div class="chart-sub">A 1.18× difference in annualized return produces an 8.81× difference in cumulative outcome over 100 years. Source-exact figures from Table 1, Bessembinder (2026).</div>
+    <canvas id="compoundChart" height="90"></canvas>
+    <div class="data-source">Source: Table 1 and Section 2, Bessembinder (2026). Figures source-exact.</div>
+  </div>
+</section>
+
+<!-- § 5 WEALTH TIERS -->
+<section class="section reveal" id="tiers">
+  <div class="section-label">§ 5 &middot; Wealth Tiers</div>
+  <h2>Three Tiers: Destroyers, Offsetters, Net Creators</h2>
+  <div class="prose">
+    <p>Section 3 provides a precise decomposition of the 29,081 sample firms. The structure is striking: 59.1% of firms destroy wealth, a further 37.2% generate positive SWC only sufficient to offset that destruction, and the remaining 3.7% — 1,082 firms — generate all $91 trillion of net SWC.</p>
+  </div>
+  <div style="max-width:var(--col);margin-top:2rem;">
+    <div class="strip-label-row">
+      <span>0 firms</span><span>← 59.1% →</span><span>← 37.1% →</span><span>← 3.7% →</span>
+    </div>
+    <div class="wealth-strip">
+      <div style="width:59.13%;background:#8b1a1a;opacity:0.75"></div>
+      <div style="width:37.15%;background:#c8c2b0"></div>
+      <div style="width:3.72%;background:#1a3a5c"></div>
+    </div>
+    <div class="strip-legend">
+      <div class="legend-row">
+        <div class="legend-swatch" style="background:#8b1a1a;opacity:0.75"></div>
+        <div class="legend-text"><strong>17,197 firms (59.13%)</strong> — Reduced shareholder wealth vs. the T-bill benchmark. Aggregate wealth destruction: −$10.67 trillion.</div>
+      </div>
+      <div class="legend-row">
+        <div class="legend-swatch" style="background:#c8c2b0"></div>
+        <div class="legend-text"><strong>10,802 firms (37.15%)</strong> — Generated positive SWC, but only sufficient to offset the above destruction. Together with destroyers, these 27,999 firms sum to zero net SWC.</div>
+      </div>
+      <div class="legend-row">
+        <div class="legend-swatch" style="background:#1a3a5c"></div>
+        <div class="legend-text"><strong>1,082 firms (3.72%)</strong> — Accounted for 100% of the $90.96 trillion in net SWC. The entirety of long-run market outperformance over T-bills originates in this group.</div>
+      </div>
+    </div>
+    <div class="data-source" style="margin-top:1rem;">Strip widths are proportional to firm counts (source-exact). Source: Section 3 and Table 7, Bessembinder (2026).</div>
+  </div>
+</section>
+
+<!-- § 6 CONCENTRATION -->
+<section class="section reveal" id="concentration">
+  <div class="section-label">§ 6 &middot; Concentration of SWC</div>
+  <h2>Fewer Firms, More Wealth: Concentration Has Intensified</h2>
+  <div class="prose">
+    <p>Table 7 reports the number of firms required to account for 10%, 25%, 50%, 75%, and 100% of net SWC across three periods. The results document a sharp increase in concentration between the 1926–2016 period and the updated sample through 2025.</p>
+  </div>
+  <div class="conc-panel">
+    <div class="conc-cell">
+      <div class="conc-period">Full century &middot; 1926–2025</div>
+      <div class="conc-stat">46</div>
+      <div class="conc-desc">firms account for 50% of net SWC, out of 29,081 total (0.16% of all listed firms)</div>
+      <div class="conc-total">Net SWC: $90.96 trillion</div>
+    </div>
+    <div class="conc-cell">
+      <div class="conc-period">Bessembinder (2018) period &middot; 1926–2016</div>
+      <div class="conc-stat">89</div>
+      <div class="conc-desc">firms account for 50% of net SWC, out of 25,383 total (0.35% of all listed firms)</div>
+      <div class="conc-total">Net SWC: $42.61 trillion</div>
+    </div>
+    <div class="conc-cell">
+      <div class="conc-period">Recent period &middot; 2017–2025</div>
+      <div class="conc-stat">13</div>
+      <div class="conc-desc">firms account for 50% of net SWC, out of 7,820 total (0.17% of all listed firms)</div>
+      <div class="conc-total">Net SWC: $48.36 trillion</div>
+    </div>
+  </div>
+  <div class="data-source" style="margin-top:0.8rem;">Source: Table 7, Bessembinder (2026). All figures source-exact.</div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Firms Required to Reach SWC Thresholds, by Period</div>
+    <div class="chart-sub">Log scale on y-axis. Source-exact data from Table 7, Bessembinder (2026).</div>
+    <canvas id="concChart" height="170"></canvas>
+    <div class="data-source">Source: Table 7, Bessembinder (2026)</div>
+  </div>
+
+  <div class="prose" style="margin-top:2rem;">
+    <p>The 2017–2025 sub-period generated $48.36 trillion in net SWC — nearly as much as the preceding nine decades combined — with just 13 firms accounting for half of that total. The top 30 firms in that sub-period account for 61.2% of post-2016 net SWC, compared to 31.1% for the equivalent group over 1926–2016. Nvidia alone represents 9.32% of post-2016 net SWC; the comparable figure for the top 2016 firm (Exxon Mobil) was 2.89%.</p>
+  </div>
+  <div class="data-source">Source: Tables 6–7 and Section 3, Bessembinder (2026)</div>
+</section>
+
+<!-- § 7 TOP SWC TABLE -->
+<section class="section reveal" id="top-swc">
+  <div class="section-label">§ 7 &middot; Top Wealth Creators — SWC</div>
+  <h2>Thirty Firms with Largest Shareholder Wealth Creation, 1926–2025</h2>
+  <div class="prose"><p>Reproduced from Table 5 of the paper. SWC is stated in millions of 2025 dollars, measured in excess of the T-bill benchmark. The top five firms alone — Apple, Nvidia, Microsoft, Alphabet, and Amazon — account for 21.4% of the $91 trillion total.</p></div>
+  <div style="overflow-x:auto;margin-top:1.5rem;">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Company</th>
+          <th class="r">SWC ($M)</th>
+          <th class="r">% of Total</th>
+          <th class="r">Cumul. %</th>
+          <th>First</th>
+          <th>Last</th>
+        </tr>
+      </thead>
+      <tbody id="swcTable"></tbody>
+    </table>
+  </div>
+  <div class="data-source" style="margin-top:0.8rem;">Source: Table 5, Bessembinder (2026). All figures source-exact. SWC measured as of December 31, 2025.</div>
+</section>
+
+<!-- § 8 TOP BHR TABLE -->
+<section class="section reveal" id="top-bhr">
+  <div class="section-label">§ 8 &middot; Top Cumulative Returns — BHR</div>
+  <h2>Thirty Stocks with Highest Cumulative Buy-and-Hold Returns, 1926–2025</h2>
+  <div class="prose">
+    <p>Reproduced from Table 1 of the paper. The key finding is that extreme cumulative outcomes are produced not by extraordinary annualized rates, but by moderate rates sustained over very long listing periods, averaging 93.9 years among the top 30. The median annualized return in this group is 13.02%; the highest is 16.53% (Altria). Hover over the annualized return chart below for firm-level detail.</p>
+  </div>
+  <div style="overflow-x:auto;margin-top:1.5rem;">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Company</th>
+          <th class="r">Cum. Wealth / $1</th>
+          <th class="r">Annual. Return</th>
+          <th>First</th>
+          <th>Last</th>
+          <th class="r">Years</th>
+        </tr>
+      </thead>
+      <tbody id="bhrTable"></tbody>
+    </table>
+  </div>
+  <div class="data-source" style="margin-top:0.8rem;">Source: Table 1, Bessembinder (2026). All figures source-exact.</div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Annualized Returns Among Top-30 Cumulative Performers (ranked by cumulative return)</div>
+    <div class="chart-sub">Despite extreme cumulative outcomes, all annualized returns cluster between 11% and 17%. Median = 13.02%; Mean = 13.00%. Red bars = above 15%. Hover for firm name and years listed. Source: Table 1, Bessembinder (2026).</div>
+    <canvas id="bhrChart" height="140"></canvas>
+    <div class="data-source">Source: Table 1, Bessembinder (2026). Figures source-exact.</div>
+  </div>
+</section>
+
+<!-- § 9 DECADES -->
+<section class="section reveal" id="decades">
+  <div class="section-label">§ 9 &middot; Decade-Horizon Returns</div>
+  <h2>What Share of Stocks Beat T-Bills Each Decade?</h2>
+  <div class="prose">
+    <p>Table 3 reports decade-horizon buy-and-hold returns for each of the ten decades from 1926 to 2025. The figures below show the percentage of stocks that exceeded matched-period T-bill returns within each decade. Blue = majority beat T-bills; red = minority beat T-bills. A structural shift is apparent: the average across the first six decades was 61.2%; across the last four it fell to 47.9%.</p>
+  </div>
+  <div class="decade-grid" id="decadeGrid"></div>
+  <div class="data-source" style="margin-top:0.8rem;">Source: Table 3, Bessembinder (2026). All figures source-exact.</div>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Median Decade Buy-and-Hold Return, by Decade</div>
+    <div class="chart-sub">Navy = positive median; red = negative median. Note the contrast between the first four and last four decades. Source-exact data from Table 3, Bessembinder (2026).</div>
+    <canvas id="decadeChart" height="130"></canvas>
+    <div class="data-source">Source: Table 3, Bessembinder (2026)</div>
+  </div>
+
+  <div class="prose" style="margin-top:2rem;">
+    <p>The median decade-horizon return averaged 63.6% across the first six decades versus 5.8% across the most recent four — despite strong value-weighted market performance from 1986 to 2025. The authors attribute this partly to the surge in listings of younger, smaller companies during the 1970s and 1980s, many of which did not survive, documented by Fama and French (2004).</p>
+  </div>
+  <div class="data-source">Source: Section 2, Bessembinder (2026)</div>
+</section>
+
+<!-- § 10 CITATION -->
+<section class="section reveal" id="citation">
+  <div class="section-label">§ 10 &middot; Reference and Access</div>
+  <h2>Full Citation</h2>
+  <div class="citation-box">
+    <div class="citation-label">Working Paper</div>
+    <div class="citation-text">
+      Bessembinder, H. (2026). One Hundred Years in the U.S. Stock Markets. W. P. Carey School of Business, Arizona State University. Initial draft: March 18, 2026.<br><br>
+      Available at SSRN: <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6438198" target="_blank" rel="noopener">https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6438198</a><br><br>
+      Related earlier study: Bessembinder, H. (2018). Do stocks outperform Treasury bills? <em>Journal of Financial Economics</em> 129, 440–457.
+    </div>
+  </div>
+  <div class="prose" style="margin-top:2rem;">
+    <p>This page is a research companion to the working paper cited above. It has no affiliation with the author or Arizona State University. All numerical claims are drawn directly from the paper as cited; no figure is approximated without explicit labeling. Readers are directed to the full paper for methodological detail, including the formal SWC computation in the Appendix.</p>
+    <p>Data source: CRSP monthly stock return database, CIZ version, January 1926 – December 2025. Treasury-bill data supplement Professor Kenneth French's series with SBBI data for January–June 1926.</p>
+  </div>
+</section>
+
+<footer>
+  Research companion site &middot; Bessembinder (2026), SSRN #6438198<br>
+  Not an official publication of Arizona State University or the author &middot; No endorsement implied<br>
+  All data sourced from the paper as cited above
+</footer>
+
+<script>
+/* DATA */
+const swcFirms = [
+  {rank:1, name:"Apple Inc.", swc:5018858, pct:5.52, cum:5.52, first:"Dec-80", last:"Dec-25"},
+  {rank:2, name:"Nvidia Corp.", swc:4575345, pct:5.03, cum:10.55, first:"Jan-99", last:"Dec-25"},
+  {rank:3, name:"Microsoft Corp.", swc:4027066, pct:4.43, cum:14.97, first:"Mar-86", last:"Dec-25"},
+  {rank:4, name:"Alphabet Inc.", swc:3571402, pct:3.93, cum:18.90, first:"Aug-04", last:"Dec-25"},
+  {rank:5, name:"Amazon.com Inc.", swc:2268816, pct:2.49, cum:21.39, first:"May-97", last:"Dec-25"},
+  {rank:6, name:"Broadcom Inc.", swc:1599823, pct:1.76, cum:23.15, first:"Aug-09", last:"Dec-25"},
+  {rank:7, name:"Exxon Mobil Corp.", swc:1419498, pct:1.56, cum:24.71, first:"Jan-26", last:"Dec-25"},
+  {rank:8, name:"Meta Platforms Inc.", swc:1390924, pct:1.53, cum:26.24, first:"May-12", last:"Dec-25"},
+  {rank:9, name:"Tesla Inc.", swc:1297362, pct:1.43, cum:27.67, first:"Jun-10", last:"Dec-25"},
+  {rank:10, name:"Walmart Inc.", swc:1204016, pct:1.32, cum:28.99, first:"Nov-72", last:"Dec-25"},
+  {rank:11, name:"Berkshire Hathaway Inc.", swc:1125721, pct:1.24, cum:30.23, first:"Oct-76", last:"Dec-25"},
+  {rank:12, name:"Eli Lilly & Co.", swc:1114141, pct:1.22, cum:31.46, first:"Jul-70", last:"Dec-25"},
+  {rank:13, name:"JPMorgan Chase & Co.", swc:1052183, pct:1.16, cum:32.61, first:"Mar-69", last:"Dec-25"},
+  {rank:14, name:"General Electric Co.", swc:842677, pct:0.93, cum:33.54, first:"Jan-26", last:"Dec-25"},
+  {rank:15, name:"Johnson & Johnson", swc:802722, pct:0.88, cum:34.42, first:"Sep-44", last:"Dec-25"},
+  {rank:16, name:"Intl. Business Machines", swc:792048, pct:0.87, cum:35.29, first:"Jan-26", last:"Dec-25"},
+  {rank:17, name:"Oracle Corp.", swc:729611, pct:0.80, cum:36.09, first:"Mar-86", last:"Dec-25"},
+  {rank:18, name:"Visa Inc.", swc:628401, pct:0.69, cum:36.78, first:"Mar-08", last:"Dec-25"},
+  {rank:19, name:"Procter & Gamble Co.", swc:626376, pct:0.69, cum:37.47, first:"Aug-29", last:"Dec-25"},
+  {rank:20, name:"Chevron Corp.", swc:606840, pct:0.67, cum:38.14, first:"Jan-26", last:"Dec-25"},
+  {rank:21, name:"Altria Group Inc.", swc:594078, pct:0.65, cum:38.79, first:"Jan-26", last:"Dec-25"},
+  {rank:22, name:"Mastercard Inc.", swc:592640, pct:0.65, cum:39.44, first:"May-06", last:"Dec-25"},
+  {rank:23, name:"Coca-Cola Co.", swc:559057, pct:0.61, cum:40.06, first:"Jan-26", last:"Dec-25"},
+  {rank:24, name:"Home Depot Inc.", swc:557699, pct:0.61, cum:40.67, first:"Sep-81", last:"Dec-25"},
+  {rank:25, name:"General Motors Corp.", swc:520479, pct:0.57, cum:41.24, first:"Jan-26", last:"May-09"},
+  {rank:26, name:"Merck & Co. Inc.", swc:519130, pct:0.57, cum:41.82, first:"May-46", last:"Dec-25"},
+  {rank:27, name:"Wells Fargo & Co.", swc:452625, pct:0.50, cum:42.31, first:"Dec-62", last:"Dec-25"},
+  {rank:28, name:"AbbVie Inc.", swc:417733, pct:0.46, cum:42.77, first:"Jan-13", last:"Dec-25"},
+  {rank:29, name:"Costco Wholesale Corp.", swc:416287, pct:0.46, cum:43.23, first:"Nov-85", last:"Dec-25"},
+  {rank:30, name:"Cisco Systems Inc.", swc:403176, pct:0.44, cum:43.67, first:"Feb-90", last:"Dec-25"},
+];
+
+const bhrStocks = [
+  {rank:1,  name:"Altria Group Inc.",            wealth:4421136, ann:16.53, first:"Jan-26", last:"Dec-25", yrs:100.0},
+  {rank:2,  name:"Vulcan Materials Co.",         wealth:501591,  ann:14.03, first:"Jan-26", last:"Dec-25", yrs:100.0},
+  {rank:3,  name:"Kansas City Southern",         wealth:350776,  ann:14.24, first:"Jan-26", last:"Nov-21", yrs:95.9},
+  {rank:4,  name:"Intl. Business Machines",      wealth:337812,  ann:13.58, first:"Jan-26", last:"Dec-25", yrs:100.0},
+  {rank:5,  name:"General Dynamics Corp.",       wealth:298081,  ann:13.43, first:"Jan-26", last:"Dec-25", yrs:100.0},
+  {rank:6,  name:"Eaton Corp. PLC",              wealth:205047,  ann:13.01, first:"Jan-26", last:"Dec-25", yrs:100.0},
+  {rank:7,  name:"Boeing Co.",                   wealth:176760,  ann:14.14, first:"Sep-34", last:"Dec-25", yrs:91.3},
+  {rank:8,  name:"Coca-Cola Co.",                wealth:155736,  ann:12.70, first:"Jan-26", last:"Dec-25", yrs:100.0},
+  {rank:9,  name:"S&P Global Inc.",              wealth:155112,  ann:13.12, first:"Feb-29", last:"Dec-25", yrs:96.9},
+  {rank:10, name:"Abbott Laboratories",          wealth:92353,   ann:13.73, first:"Mar-37", last:"Dec-25", yrs:88.8},
+  {rank:11, name:"Deere & Co.",                  wealth:83720,   ann:13.02, first:"Jun-33", last:"Dec-25", yrs:92.6},
+  {rank:12, name:"PepsiCo Inc.",                 wealth:78325,   ann:11.93, first:"Jan-26", last:"Dec-25", yrs:100.0},
+  {rank:13, name:"Johnson & Johnson",            wealth:76202,   ann:14.82, first:"Sep-44", last:"Dec-25", yrs:81.3},
+  {rank:14, name:"Caterpillar Inc.",             wealth:73741,   ann:12.37, first:"Dec-29", last:"Dec-25", yrs:96.1},
+  {rank:15, name:"Hershey Co.",                  wealth:71712,   ann:12.07, first:"Dec-27", last:"Dec-25", yrs:98.1},
+  {rank:16, name:"Trane Technologies PLC",       wealth:63854,   ann:11.70, first:"Jan-26", last:"Dec-25", yrs:100.0},
+  {rank:17, name:"Universal Corp.",              wealth:62395,   ann:11.90, first:"Nov-27", last:"Dec-25", yrs:98.2},
+  {rank:18, name:"Wyeth",                        wealth:54856,   ann:13.96, first:"Apr-26", last:"Sep-09", yrs:83.5},
+  {rank:19, name:"Exxon Mobil Corp.",            wealth:51969,   ann:11.47, first:"Jan-26", last:"Dec-25", yrs:100.0},
+  {rank:20, name:"CVS Health Corp.",             wealth:51241,   ann:11.79, first:"Sep-28", last:"Dec-25", yrs:97.3},
+  {rank:21, name:"Northrop Grumman Corp.",       wealth:49764,   ann:15.72, first:"Dec-51", last:"Dec-25", yrs:74.1},
+  {rank:22, name:"Archer-Daniels-Midland Co.",   wealth:44416,   ann:11.29, first:"Jan-26", last:"Dec-25", yrs:100.0},
+  {rank:23, name:"UST Inc.",                     wealth:43887,   ann:13.74, first:"Jan-26", last:"Dec-08", yrs:83.0},
+  {rank:24, name:"Tootsie Roll Industries Inc.", wealth:41101,   ann:11.21, first:"Jan-26", last:"Dec-25", yrs:100.0},
+  {rank:25, name:"Kroger Co.",                   wealth:40444,   ann:11.43, first:"Jan-28", last:"Dec-25", yrs:98.0},
+  {rank:26, name:"Bristol-Myers Squibb Co.",     wealth:40423,   ann:12.17, first:"Sep-33", last:"Dec-25", yrs:92.3},
+  {rank:27, name:"Carpenter Technology Corp.",   wealth:37634,   ann:12.63, first:"Jun-37", last:"Dec-25", yrs:88.6},
+  {rank:28, name:"Emerson Electric Co.",         wealth:34058,   ann:13.69, first:"Sep-44", last:"Dec-25", yrs:81.3},
+  {rank:29, name:"Pfizer Inc.",                  wealth:28532,   ann:13.33, first:"Jan-44", last:"Dec-25", yrs:82.0},
+  {rank:30, name:"RTX Corp.",                    wealth:26746,   ann:11.11, first:"Apr-29", last:"Dec-25", yrs:96.8},
+];
+
+const decadeData = [
+  {d:"1926–35", p:36.08, m:-24.53},
+  {d:"1936–45", p:89.38, m:132.08},
+  {d:"1946–55", p:86.59, m:144.86},
+  {d:"1956–65", p:74.65, m: 69.32},
+  {d:"1966–75", p:21.54, m:-27.07},
+  {d:"1976–85", p:59.05, m: 87.20},
+  {d:"1986–95", p:45.95, m:  8.08},
+  {d:"1996–05", p:48.89, m: 11.24},
+  {d:"2006–15", p:49.00, m:  2.52},
+  {d:"2016–25", p:47.70, m:  1.44},
+];
+
+/* BUILD SWC TABLE */
+const maxSWC = swcFirms[0].swc;
+swcFirms.forEach(f => {
+  const bw = Math.round((f.swc/maxSWC)*70);
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td><span class="rank-pill">${String(f.rank).padStart(2,'0')}</span></td><td class="firm">${f.name}</td><td class="mono"><span class="mini-bar" style="width:${bw}px"></span>${f.swc.toLocaleString()}</td><td class="mono">${f.pct.toFixed(2)}%</td><td class="mono">${f.cum.toFixed(2)}%</td><td style="font-family:var(--mono);font-size:0.67rem;color:var(--ink-faint)">${f.first}</td><td style="font-family:var(--mono);font-size:0.67rem;color:var(--ink-faint)">${f.last}</td>`;
+  document.getElementById('swcTable').appendChild(tr);
+});
+
+/* BUILD BHR TABLE */
+const maxW = bhrStocks[0].wealth;
+bhrStocks.forEach(f => {
+  const bw = Math.round((f.wealth/maxW)*70);
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td><span class="rank-pill">${String(f.rank).padStart(2,'0')}</span></td><td class="firm">${f.name}</td><td class="mono"><span class="mini-bar" style="width:${bw}px;background:var(--accent)"></span>${f.wealth.toLocaleString()}</td><td class="mono">${f.ann.toFixed(2)}%</td><td style="font-family:var(--mono);font-size:0.67rem;color:var(--ink-faint)">${f.first}</td><td style="font-family:var(--mono);font-size:0.67rem;color:var(--ink-faint)">${f.last}</td><td class="mono">${f.yrs.toFixed(1)}</td>`;
+  document.getElementById('bhrTable').appendChild(tr);
+});
+
+/* BUILD DECADE GRID */
+decadeData.forEach(d => {
+  const col = d.p >= 50 ? 'var(--accent2)' : 'var(--accent)';
+  const el = document.createElement('div');
+  el.className = 'decade-cell';
+  el.innerHTML = `<div class="decade-year">${d.d}</div><div class="decade-pct" style="color:${col}">${d.p.toFixed(1)}%</div><div class="decade-bar"><div class="decade-bar-fill" style="width:${d.p}%;background:${col}"></div></div><div class="decade-foot">beat T-bills</div>`;
+  document.getElementById('decadeGrid').appendChild(el);
+});
+
+/* CHARTS */
+const tf = { family:"'Source Code Pro',monospace", size:11 };
+const tc = '#7a7568';
+const gC = '#c8c2b0';
+
+new Chart(document.getElementById('proportionChart'), {
+  type:'bar',
+  data:{ labels:['Positive BHR (vs. zero)','Exceed T-bill return','Outperform VW market'], datasets:[{data:[48.22,41.17,27.60], backgroundColor:['#1a3a5c','#8b1a1a','#4a5a30'], borderWidth:0}]},
+  options:{ responsive:true, plugins:{ legend:{display:false}, tooltip:{callbacks:{label:c=>` ${c.raw.toFixed(2)}% of stocks`}}}, scales:{ y:{min:0,max:60,ticks:{callback:v=>v+'%',font:tf,color:tc},grid:{color:gC}}, x:{ticks:{font:{family:"'EB Garamond'",size:13},color:'#3d3a30'},grid:{display:false}}}}
+});
+
+new Chart(document.getElementById('compoundChart'), {
+  type:'bar',
+  data:{ labels:['Annualized return ratio (Altria ÷ Vulcan)','Cumulative return ratio (Altria ÷ Vulcan)'], datasets:[{data:[1.18,8.81], backgroundColor:['#c8c2b0','#1a3a5c'], borderWidth:0}]},
+  options:{ indexAxis:'y', responsive:true, plugins:{ legend:{display:false}, tooltip:{callbacks:{label:c=>` ${c.raw}×`}}}, scales:{ x:{ticks:{callback:v=>v+'×',font:tf,color:tc},grid:{color:gC}}, y:{ticks:{font:{family:"'EB Garamond'",size:13},color:'#3d3a30'},grid:{display:false}}}}
+});
+
+new Chart(document.getElementById('concChart'), {
+  type:'bar',
+  data:{ labels:['Top 10%','Top 25%','Top 50%','Top 75%'], datasets:[
+    {label:'1926–2025', data:[2,8,46,208], backgroundColor:'#1a3a5c'},
+    {label:'1926–2016', data:[5,20,89,195], backgroundColor:'#8b1a1a'},
+    {label:'2017–2025', data:[2,4,13,77], backgroundColor:'#4a5a30'},
+  ]},
+  options:{ responsive:true, plugins:{ legend:{labels:{font:tf,color:'#3d3a30',boxWidth:11}}, tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.raw} firms`}}}, scales:{ y:{type:'logarithmic', title:{display:true,text:'Number of firms (log scale)',font:{family:"'Source Code Pro'",size:10},color:tc}, ticks:{font:tf,color:tc,callback:v=>[2,4,5,8,13,20,46,77,89,195,208].includes(v)?v:''}, grid:{color:gC}}, x:{ticks:{font:{family:"'EB Garamond'",size:13},color:'#3d3a30'},grid:{display:false}}}}
+});
+
+new Chart(document.getElementById('bhrChart'), {
+  type:'bar',
+  data:{ labels:bhrStocks.map(f=>`#${f.rank}`), datasets:[{label:'Annualized return', data:bhrStocks.map(f=>f.ann), backgroundColor:bhrStocks.map(f=>f.ann>15?'#8b1a1a':'#1a3a5c'), borderWidth:0}]},
+  options:{ responsive:true, plugins:{ legend:{display:false}, tooltip:{callbacks:{ title:i=>[bhrStocks[i[0].dataIndex].name], label:c=>` ${c.raw.toFixed(2)}% / yr · ${bhrStocks[c.dataIndex].yrs} yrs listed`}}}, scales:{ y:{min:10,max:17,title:{display:true,text:'Annualized compound return (%)',font:{family:"'Source Code Pro'",size:10},color:tc}, ticks:{callback:v=>v+'%',font:tf,color:tc},grid:{color:gC}}, x:{title:{display:true,text:'Rank by cumulative return',font:{family:"'Source Code Pro'",size:10},color:tc},ticks:{font:tf,maxRotation:0},grid:{display:false}}}}
+});
+
+new Chart(document.getElementById('decadeChart'), {
+  type:'bar',
+  data:{ labels:decadeData.map(d=>d.d), datasets:[{data:decadeData.map(d=>d.m), backgroundColor:decadeData.map(d=>d.m>=0?'#1a3a5c':'#8b1a1a'), borderWidth:0}]},
+  options:{ responsive:true, plugins:{ legend:{display:false}, tooltip:{callbacks:{label:c=>` Median BHR: ${c.raw.toFixed(2)}%`}}}, scales:{ y:{ticks:{callback:v=>v+'%',font:tf,color:tc},grid:{color:gC}}, x:{ticks:{font:tf,color:'#3d3a30'},grid:{display:false}}}}
+});
+
+/* SCROLL REVEAL */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add('vis');
+    e.target.querySelectorAll('.finding-card').forEach((c,i) => setTimeout(()=>c.classList.add('vis'),i*100));
+  });
+}, {threshold:0.07});
+document.querySelectorAll('.reveal, .section').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
